@@ -1,10 +1,16 @@
 // app/page.tsx
-import React from "react";
+"use client"; 
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold">Hoşgeldiniz!</h1>
-    </div>
-  );
+  const router = useRouter();
+
+  useEffect(() => {
+    // Yönlendirme
+    router.push("/characters");
+  }, [router]);
+
+  return null; 
 }

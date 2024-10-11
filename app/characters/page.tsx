@@ -1,5 +1,5 @@
 // app/characters/page.tsx
-"use client"; // Eğer daha önce eklemediyseniz ekleyin
+"use client"; 
 
 import { useEffect, useState } from "react";
 import CharacterCard from "./characterCard";
@@ -7,11 +7,13 @@ import Filters from "./filters";
 import { Character } from "../../types/character";
 import { fetchCharacters } from "../../utils/fetchCharacters";
 
+// Ana bileşen
 export default function CharactersPage() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [status, setStatus] = useState<string | null>(null);
   const [gender, setGender] = useState<string | null>(null);
 
+  // İlk yüklemede veri çekmek için SSR'yi kullanın
   useEffect(() => {
     const getCharacters = async () => {
       const data = await fetchCharacters(status, gender);
