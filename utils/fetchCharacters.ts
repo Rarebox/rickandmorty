@@ -1,5 +1,4 @@
-// utils/fetchCharacters.ts
-export const fetchCharacters = async (status: string | null, gender: string | null): Promise<any[]> => {
+export const fetchAllCharacters = async (status: string | null, gender: string | null): Promise<any[]> => {
   let url = "https://rickandmortyapi.com/api/character";
   const params = new URLSearchParams();
 
@@ -14,14 +13,20 @@ export const fetchCharacters = async (status: string | null, gender: string | nu
     url += `?${params.toString()}`;
   }
 
-  const res = await fetch(url);
+  let allCharacters: any[] = [];
+  let nextPage = url;
 
-  if (!res.ok) {
-    throw new Error('Network response was not ok');
+  while (nextPage) {
+    const res = await fetch(nextPage);
+
+    if (!res.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await res.json();
+    allCharacters = [...allCharacters, ...data.results];
+    nextPage = data.info.next; // Sonraki sayfayı al
   }
 
-  const data = await res.json();
-  console.log(data);
-
-  return data.results || [];
+  return allCharacters;
 };

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CharacterCard from "./characterCard";
 import Filters from "./filters";
 import { Character } from "../../types/character";
-import { fetchCharacters } from "../../utils/fetchCharacters";
+import { fetchAllCharacters } from "../../utils/fetchCharacters";
 
 export default function CharactersPage() {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -16,7 +16,7 @@ export default function CharactersPage() {
     const getCharacters = async () => {
       setLoading(true);
       try {
-        const data = await fetchCharacters(status, gender); // species kaldırıldı
+        const data = await fetchAllCharacters(status, gender);
         setCharacters(data);
       } catch (error) {
         console.error("Error fetching characters:", error);
@@ -26,13 +26,13 @@ export default function CharactersPage() {
     };
 
     getCharacters();
-  }, [status, gender]); // species kaldırıldı
+  }, [status, gender]);
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Rick and Morty Characters</h1>
-        <Filters setStatus={setStatus} setGender={setGender} /> {/* setSpecies kaldırıldı */}
+        <Filters setStatus={setStatus} setGender={setGender} />
       </div>
 
       {loading ? (
