@@ -1,21 +1,49 @@
-// app/characters/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import CharacterCard from "./characterCard";
 import Filters from "./filters";
 import { Character } from "../../types/character";
 import { fetchCharacters } from "../../utils/fetchCharacters";
-import ClientSideComponent from "./ClientSideComponent";
 
-// Sunucu tarafında karakterleri alır
-export default async function CharactersPage({ searchParams }: { searchParams: { status?: string; gender?: string } }) {
-  const status = searchParams.status || null;
-  const gender = searchParams.gender || null;
+export default function CharactersPage() {
+  const [characters, setCharacters] = useState<Character[]>([]);
+  const [status, setStatus] = useState<string | null>(null);
+  const [gender, setGender] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // Sunucu tarafında karakter verilerini alırız
-  const characters: Character[] = await fetchCharacters(status, gender);
+  useEffect(() => {
+    const getCharacters = async () => {
+      setLoading(true);
+      try {
+        const data = await fetchCharacters(status, gender); // species kaldırıldı
+        setCharacters(data);
+      } catch (error) {
+        console.error("Error fetching characters:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCharacters();
+  }, [status, gender]); // species kaldırıldı
 
   return (
     <div className="p-4">
-      <ClientSideComponent initialCharacters={characters} /> {/* İstemci bileşenini çağırıyoruz */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Rick and Morty Characters</h1>
+        <Filters setStatus={setStatus} setGender={setGender} /> {/* setSpecies kaldırıldı */}
+      </div>
+
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {characters.map((character) => (
+            <CharacterCard key={character.id} character={character} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
